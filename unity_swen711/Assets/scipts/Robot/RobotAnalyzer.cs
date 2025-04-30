@@ -15,7 +15,7 @@ public class RobotAnalyzer : MonoBehaviour
     {
         if (monitor.IsLowPower())
             planner.PlanStealth();
-        else if (monitor.EnemyNearby())
+        else if (monitor.EnemyNearby() || monitor.IsInDangerZone())
             planner.PlanCombat();
         else
             planner.PlanBalanced();

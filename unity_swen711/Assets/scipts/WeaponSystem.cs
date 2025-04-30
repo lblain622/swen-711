@@ -2,8 +2,9 @@
 
 public class WeaponSystem : MonoBehaviour
 {
-    public float damage = 10f;
+    public float baseDamage = 10f;
     public float energyCost = 5f;
+    public float damageMultiplier = 1f;  // Modified by RobotController
 
     private PowerManagement powerManagement;
 
@@ -14,7 +15,7 @@ public class WeaponSystem : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && powerManagement.currentBattery >= energyCost)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && powerManagement.currentBattery >= energyCost)
         {
             Attack();
         }
@@ -22,13 +23,14 @@ public class WeaponSystem : MonoBehaviour
 
     void Attack()
     {
-        // Example of damage dealing, e.g., to an enemy
+        float actualDamage = baseDamage * damageMultiplier;
+        
         Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, 2f);
         foreach (var enemy in enemies)
         {
             if (enemy.CompareTag("Enemy"))
             {
-                enemy.GetComponent<DamageSystem>().TakeDamage(damage);
+                enemy.GetComponent<DamageSystem>().TakeDamage(actualDamage);
             }
         }
 

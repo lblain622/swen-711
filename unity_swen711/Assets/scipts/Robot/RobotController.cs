@@ -6,7 +6,7 @@ public class RobotController : MonoBehaviour
 {
     public TextMeshProUGUI modeText;
     private Package currentPackage;
-    public Transform packageCarryPoint;  // Where the package will appear in front of the robot
+    
     public float baseSpeed = 5f;
     public float batteryLevel = 100f;
     public float batteryDrainRate = 1f;
@@ -16,15 +16,29 @@ public class RobotController : MonoBehaviour
     private Camera mainCamera;
     public float rotationSpeed = 10f;
     public float rotationOffset = -90f; // Adjust for sprite facing direction
-
+    public float combatDamageMultiplier = 1.5f;
+    public float combatDamageReduction = 0.7f;
+    public float stealthDamageMultiplier = 0.7f;
+    public float stealthDetectionRange = 3f;
+    public float speedVisionReduction = 0.6f;
+    public float speedHealthReduction = 0.7f;
+    private WeaponSystem weaponSystem;
+    private DamageSystem damageSystem;
+    private float defaultCameraSize;
     private float moveSpeed;
 
     void Start()
     {
+        weaponSystem = GetComponent<WeaponSystem>();
+        damageSystem = GetComponent<DamageSystem>();
         rb = GetComponent<Rigidbody2D>();
         if (rb == null)
         {
             Debug.LogError("Rigidbody2D component is missing on this GameObject.");
+        }
+        if (mainCamera != null)
+        {
+            defaultCameraSize = mainCamera.orthographicSize;
         }
 
         moveSpeed = baseSpeed;
@@ -59,78 +73,15 @@ public class RobotController : MonoBehaviour
         HandleMovement();
         RotateToMouse();
         DrainBattery();
-        
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TryPickUpPackage();
-        }
+   
 
-        // Package delivery when close to mailbox
-        if (currentPackage != null && Vector2.Distance(transform.position, currentPackage.transform.position) < 1f)
-        {
-            TryDeliverPackage();
-        }
-
-        // Switch modes
+        // Switch modes Override
         if (Input.GetKeyDown(KeyCode.Alpha1)) SetMode(RobotMode.Balanced);
         if (Input.GetKeyDown(KeyCode.Alpha2)) SetMode(RobotMode.Stealth);
         if (Input.GetKeyDown(KeyCode.Alpha3)) SetMode(RobotMode.Combat);
         if (Input.GetKeyDown(KeyCode.Alpha4)) SetMode(RobotMode.Speed);
     }
-
-    void TryPickUpPackage()
-    {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1.5f, LayerMask.GetMask("Package"));
-        foreach (Collider2D hit in hits)
-        {
-            Package package = hit.GetComponent<Package>();
-            if (package != null && !package.isDelivered)
-            {
-                PickUpPackage(package);
-                break;
-            }
-        }
-
-    }
-
-
-    void PickUpPackage(Package package)
-    {
-        if (currentPackage == null)
-        {
-            currentPackage = package;
-            if (packageCarryPoint != null)
-            {
-                package.transform.position = packageCarryPoint.position;  // Attach the package to the robot
-                package.transform.parent = packageCarryPoint;  // Make it follow the robot's position
-                package.gameObject.SetActive(true);  // Ensure package is active when picked up
-                Debug.Log("Picked up the package.");
-            }
-            else
-            {
-                Debug.LogError("PackageCarryPoint is not assigned!");
-            }
-        }
-    }
-
-    void TryDeliverPackage()
-    {
-        if (currentPackage != null)
-        {
-            // Assuming there is a mailbox in the scene tagged as "Mailbox"
-            Collider2D hit = Physics2D.OverlapCircle(transform.position, 0.5f, LayerMask.GetMask("Mailbox"));
-            if (hit != null)
-            {
-                currentPackage.MarkAsDelivered();  // Mark the package as delivered
-                currentPackage = null;  // Remove the reference to the package
-                Debug.Log("Package delivered to mailbox.");
-            }
-            else
-            {
-                Debug.LogError("No mailbox detected nearby.");
-            }
-        }
-    }
+    
 
     void HandleMovement()
     {
@@ -146,12 +97,6 @@ public class RobotController : MonoBehaviour
         else
         {
             Debug.LogError("Rigidbody2D is null. Cannot move the robot.");
-        }
-
-        // If a package is carried, ensure it follows the robot
-        if (currentPackage != null && packageCarryPoint != null)
-        {
-            currentPackage.transform.position = packageCarryPoint.position;
         }
     }
 
@@ -182,20 +127,36 @@ public class RobotController : MonoBehaviour
             case RobotMode.Balanced:
                 moveSpeed = baseSpeed;
                 batteryDrainRate = 1f;
+                ResetModeEffects();
                 break;
             case RobotMode.Stealth:
-                moveSpeed = baseSpeed * 0.5f;
-                batteryDrainRate = 0.5f;
+                moveSpeed = baseSpeed * 1.2f; 
+                batteryDrainRate = 0.8f;
+                if (weaponSystem != null) weaponSystem.damageMultiplier = stealthDamageMultiplier;
                 break;
             case RobotMode.Combat:
                 moveSpeed = baseSpeed * 0.8f;
                 batteryDrainRate = 1.5f;
+                if (weaponSystem != null) weaponSystem.damageMultiplier = combatDamageMultiplier;
+                if (damageSystem != null) damageSystem.damageReduction = combatDamageReduction;
                 break;
             case RobotMode.Speed:
-                moveSpeed = baseSpeed * 1.5f;
+                moveSpeed = baseSpeed * 1.8f;
                 batteryDrainRate = 2f;
+                if (mainCamera != null) mainCamera.orthographicSize = defaultCameraSize * speedVisionReduction;
+                if (damageSystem != null) damageSystem.healthMultiplier = speedHealthReduction;
                 break;
         }
+    }
+    private void ResetModeEffects()
+    {
+        if (weaponSystem != null) weaponSystem.damageMultiplier = 1f;
+        if (damageSystem != null)
+        {
+            damageSystem.damageReduction = 1f;
+            damageSystem.healthMultiplier = 1f;
+        }
+        if (mainCamera != null) mainCamera.orthographicSize = defaultCameraSize;
     }
 
     void RotateToMouse()

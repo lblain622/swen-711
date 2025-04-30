@@ -7,7 +7,8 @@ public class RobotMemory : MonoBehaviour
 
     public void RememberDanger(Vector3 position)
     {
-        dangerSpots.Add(position);
+        if (!dangerSpots.Contains(position))
+            dangerSpots.Add(position);
     }
 
     public bool IsDangerous(Vector3 position)
@@ -19,4 +20,6 @@ public class RobotMemory : MonoBehaviour
         }
         return false;
     }
+
+    public void ClearMemory() => dangerSpots.Clear();
 }

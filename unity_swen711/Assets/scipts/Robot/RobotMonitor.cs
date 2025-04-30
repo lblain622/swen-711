@@ -3,16 +3,15 @@
 public class RobotMonitor : MonoBehaviour
 {
     private RobotController robot;
+    private RobotMemory memory;
 
     void Start()
     {
         robot = GetComponent<RobotController>();
+        memory = GetComponent<RobotMemory>();
     }
 
-    public bool IsLowPower()
-    {
-        return robot.batteryLevel < 20f;
-    }
+    public bool IsLowPower() => robot.batteryLevel < 20f;
 
     public bool EnemyNearby()
     {
@@ -24,9 +23,8 @@ public class RobotMonitor : MonoBehaviour
         return false;
     }
 
-    public bool CriticalPackage()
+    public bool IsInDangerZone()
     {
-        // Placeholder, can expand later
-        return false;
+        return memory != null && memory.IsDangerous(transform.position);
     }
 }

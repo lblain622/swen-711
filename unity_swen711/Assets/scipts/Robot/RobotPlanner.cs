@@ -9,18 +9,8 @@ public class RobotPlanner : MonoBehaviour
         controller = GetComponent<RobotController>();
     }
 
-    public void PlanStealth()
-    {
-        controller.SetMode(RobotMode.Stealth);
-    }
-
-    public void PlanCombat()
-    {
-        controller.SetMode(RobotMode.Combat);
-    }
-
-    public void PlanBalanced()
-    {
-        controller.SetMode(RobotMode.Balanced);
-    }
+    public void PlanStealth() => controller.SetMode(RobotMode.Stealth);
+    public void PlanCombat() => controller.SetMode(RobotMode.Combat);
+    public void PlanBalanced() => controller.SetMode(RobotMode.Balanced);
+    public void PlanSpeed() => controller.SetMode(RobotMode.Speed);
 }
