@@ -15,6 +15,7 @@ public class RobotController : MonoBehaviour
     public float batteryDrainRate = 1f;
     public float rotationSpeed = 10f;
     public float rotationOffset = -90f;
+    public bool lockMode = false;
     
     [Header("Mode Settings")]
     public RobotMode currentMode = RobotMode.Balanced;
@@ -127,7 +128,12 @@ public class RobotController : MonoBehaviour
     {
         inStealthFromStationary = true;
         SetMode(RobotMode.Stealth);
+        lockMode = true;
         batteryDrainRate *= 1.5f;
+        if (modeText != null)
+        {
+            modeText.text = $"Mode: {currentMode}";
+        }
         
         if (playerHealth != null)
         {
@@ -138,6 +144,7 @@ public class RobotController : MonoBehaviour
     public void ExitStationaryStealth()
     {
         inStealthFromStationary = false;
+        lockMode = false;
         SetMode(RobotMode.Balanced);
         batteryDrainRate = 1f;
         
@@ -205,8 +212,8 @@ public class RobotController : MonoBehaviour
 
     public void SetMode(RobotMode mode)
     {
+        if (lockMode) return;
         currentMode = mode;
-
         if (modeText != null)
         {
             modeText.text = $"Mode: {currentMode}";
