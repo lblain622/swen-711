@@ -25,6 +25,8 @@ public class RobotController : MonoBehaviour
     public float speedVisionReduction = 0.6f;
     public float speedHealthReduction = 0.7f;
     public float healthRegenRate = 2f; 
+    
+    
     public float stealthActivationTime = 2f; // Changed from stealthActivationDelay
     
     // Private variables
