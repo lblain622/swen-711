@@ -12,7 +12,20 @@ public class Bullet : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.enabled = false;
+    
+        
+        if (GetComponent<Rigidbody2D>() == null)
+        {
+            gameObject.AddComponent<Rigidbody2D>();
+            GetComponent<Rigidbody2D>().isKinematic = true;
+        }
+    
+        if (GetComponent<Collider2D>() == null)
+        {
+            gameObject.AddComponent<CircleCollider2D>();
+        }
     }
+
 
     public void Initialize(Vector2 moveDirection, float moveSpeed, float bulletLifetime, float bulletDamage)
     {
@@ -37,11 +50,30 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log($"Bullet collided with: {collision.gameObject.name}"); // Debug line
+
         if (collision.gameObject.CompareTag("Enemy"))
         {
             EnemyAI enemy = collision.gameObject.GetComponent<EnemyAI>();
             if (enemy != null)
             {
+                Debug.Log("Dealing damage to enemy");
+                enemy.TakeDamage(Mathf.RoundToInt(damage));
+            }
+        }
+
+        Destroy(gameObject);
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log($"Bullet triggered with: {other.gameObject.name}");
+    
+        if (other.CompareTag("Enemy"))
+        {
+            EnemyAI enemy = other.GetComponent<EnemyAI>();
+            if (enemy != null)
+            {
+                Debug.Log("Dealing trigger damage to enemy");
                 enemy.TakeDamage(Mathf.RoundToInt(damage));
             }
         }

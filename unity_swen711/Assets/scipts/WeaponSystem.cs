@@ -50,7 +50,9 @@ public class WeaponSystem : MonoBehaviour
             {
                 FireBullet();
                 nextFireTime = Time.time + settings.fireRate;
-                powerManagement.currentBattery -= energyCost;
+
+                //powerManagement.currentBattery -= energyCost;
+
             }
         }
     }
