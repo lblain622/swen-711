@@ -2,7 +2,7 @@
 
 public class DamageSystem : MonoBehaviour
 {
-    public int baseHealth = 100;
+    public int baseHealth = 5;
     public float damageReduction = 1f;  // Modified by RobotController
     public float healthMultiplier = 1f;  // Modified by RobotController
     
