@@ -4,7 +4,7 @@ public class WeaponSystem : MonoBehaviour
 {
     public float baseDamage = 10f;
     public float energyCost = 5f;
-    public float damageMultiplier = 1f;  // Modified by RobotController
+    public float damageMultiplier = 1f;  
 
     private PowerManagement powerManagement;
 

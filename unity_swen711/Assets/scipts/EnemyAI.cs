@@ -2,7 +2,7 @@
 
 public class EnemyAI : MonoBehaviour
 {
-    public Transform player;
+    private Transform player;
     public float baseSpeed = 2f;
     private float currentSpeed;
     private float distance;
@@ -12,6 +12,15 @@ public class EnemyAI : MonoBehaviour
 
     void Start()
     {
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        if (playerObj != null)
+        {
+            player = playerObj.transform;
+        }
+        else
+        {
+            Debug.LogError("No GameObject with tag 'Player' found!");
+        }
         playerController = player.GetComponent<RobotController>();
         currentSpeed = baseSpeed;
     }

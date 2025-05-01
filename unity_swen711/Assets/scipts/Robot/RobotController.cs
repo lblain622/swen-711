@@ -6,7 +6,7 @@ public class RobotController : MonoBehaviour
 {
     public TextMeshProUGUI modeText;
     private Package currentPackage;
-    
+    public float maxBattery = 100f;
     public float baseSpeed = 5f;
     public float batteryLevel = 100f;
     public float batteryDrainRate = 1f;
@@ -81,7 +81,22 @@ public class RobotController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3)) SetMode(RobotMode.Combat);
         if (Input.GetKeyDown(KeyCode.Alpha4)) SetMode(RobotMode.Speed);
     }
-    
+    public void ResetRobot()
+    {
+        // Reset battery
+        batteryLevel = maxBattery;
+        
+        // Reset mode
+        SetMode(RobotMode.Balanced);
+        
+        
+        // Reset position (optional)
+        // transform.position = Vector3.zero;
+        
+
+    }
+
+  
 
     void HandleMovement()
     {

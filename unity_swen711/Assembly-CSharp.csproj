@@ -63,11 +63,14 @@
     <Compile Include="Assets\scipts\Robot\RobotMemory.cs" />
     <Compile Include="Assets\scipts\PowerManager.cs" />
     <Compile Include="Assets\scipts\Robot\special\GrabController.cs" />
+    <Compile Include="Assets\scipts\GameInitializer.cs" />
     <Compile Include="Assets\scipts\Robot\special\Health.cs" />
     <Compile Include="Assets\scipts\WeaponSystem.cs" />
     <Compile Include="Assets\scipts\Bullet.cs" />
+    <Compile Include="Assets\scipts\SpawnManager.cs" />
     <Compile Include="Assets\scipts\DamageSystem.cs" />
     <Compile Include="Assets\scipts\Robot\RobotAnalyzer.cs" />
+    <Compile Include="Assets\scipts\GameManager.cs" />
     <Compile Include="Assets\scipts\package.cs" />
     <Compile Include="Assets\scipts\EnemyAI.cs" />
     <Compile Include="Assets\scipts\Robot\RobotPlanner.cs" />

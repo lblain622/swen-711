@@ -2,13 +2,15 @@
 
 public class Package : MonoBehaviour
 {
-    public bool isDelivered = false;  
-
-
+    public bool isDelivered = false;
+    
     public void MarkAsDelivered()
     {
         isDelivered = true;
-        gameObject.SetActive(false);  
-        Debug.Log("Package Delivered!");
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddScore(1);
+        }
+        Debug.Log("Package delivered!");
     }
 }
