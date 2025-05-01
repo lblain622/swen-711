@@ -15,6 +15,7 @@ public class RobotController : MonoBehaviour
     public float batteryDrainRate = 1f;
     public float rotationSpeed = 10f;
     public float rotationOffset = -90f;
+    public bool lockMode = false;
     
     [Header("Mode Settings")]
     public RobotMode currentMode = RobotMode.Balanced;
@@ -28,6 +29,8 @@ public class RobotController : MonoBehaviour
     
     
     public float stealthActivationTime = 2f; // Changed from stealthActivationDelay
+
+    public AudioSource source; 
     
     // Private variables
     private Package currentPackage;
@@ -98,6 +101,10 @@ public class RobotController : MonoBehaviour
         CheckStealthActivation();
     }
 
+    public void changeSpeed(float speed){
+        baseSpeed = speed;
+    }
+
     public void CheckStealthActivation()
     {
         if (!IsMoving())
@@ -123,7 +130,12 @@ public class RobotController : MonoBehaviour
     {
         inStealthFromStationary = true;
         SetMode(RobotMode.Stealth);
+        lockMode = true;
         batteryDrainRate *= 1.5f;
+        if (modeText != null)
+        {
+            modeText.text = $"Mode: {currentMode}";
+        }
         
         if (playerHealth != null)
         {
@@ -134,6 +146,7 @@ public class RobotController : MonoBehaviour
     public void ExitStationaryStealth()
     {
         inStealthFromStationary = false;
+        lockMode = false;
         SetMode(RobotMode.Balanced);
         batteryDrainRate = 1f;
         
@@ -180,7 +193,9 @@ public class RobotController : MonoBehaviour
 
         if (batteryLevel <= 0)
         {
-            moveSpeed = 0;  
+            baseSpeed = 0;  
+            source.Stop();
+
             Debug.Log("Battery is empty. Robot cannot move!");
         }
 
@@ -199,8 +214,8 @@ public class RobotController : MonoBehaviour
 
     public void SetMode(RobotMode mode)
     {
+        if (lockMode) return;
         currentMode = mode;
-
         if (modeText != null)
         {
             modeText.text = $"Mode: {currentMode}";
@@ -215,13 +230,13 @@ public class RobotController : MonoBehaviour
                 break;
                 
             case RobotMode.Stealth:
-                moveSpeed = baseSpeed * 0.7f;
+                moveSpeed = baseSpeed * .7f;
                 batteryDrainRate = 1.2f;
                 if (weaponSystem != null) weaponSystem.damageMultiplier = stealthDamageMultiplier;
                 break;
                 
             case RobotMode.Combat:
-                moveSpeed = baseSpeed * 0.5f;
+                moveSpeed = baseSpeed * .8f;
                 batteryDrainRate = 1.5f;
                 if (weaponSystem != null) weaponSystem.damageMultiplier = combatDamageMultiplier;
                 if (damageSystem != null) damageSystem.damageReduction = combatDamageReduction;

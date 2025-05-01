@@ -8,7 +8,7 @@ using UnityEngine;
         public Transform grabDetect;
         public Transform boxholder;
         public float rayDist;
-        
+
 
         void Update()
         {

@@ -78,6 +78,7 @@
     <Compile Include="Assets\scipts\Robot\RobotPlanner.cs" />
     <Compile Include="Assets\scipts\CameraFollow.cs" />
     <Compile Include="Assets\scipts\Robot\RobotController.cs" />
+    <Compile Include="Assets\scipts\Adaptations\musicAdapt.cs" />
     <Compile Include="Assets\scipts\Robot\Mailbox.cs" />
     <Compile Include="Assets\scipts\Robot\RobotMonitor.cs" />
   </ItemGroup>
