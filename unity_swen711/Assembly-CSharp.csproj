@@ -73,6 +73,7 @@
     <Compile Include="Assets\scipts\GameManager.cs" />
     <Compile Include="Assets\scipts\package.cs" />
     <Compile Include="Assets\scipts\EnemyAI.cs" />
+    <Compile Include="Assets\scipts\EnemySpawner.cs" />
     <Compile Include="Assets\scipts\Robot\RobotPlanner.cs" />
     <Compile Include="Assets\scipts\CameraFollow.cs" />
     <Compile Include="Assets\scipts\Robot\RobotController.cs" />

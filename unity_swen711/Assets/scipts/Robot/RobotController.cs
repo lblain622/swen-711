@@ -122,7 +122,7 @@ public class RobotController : MonoBehaviour
 
         if (batteryLevel <= 0)
         {
-            moveSpeed = 0;  // Stop movement when battery is empty
+            moveSpeed = 0;  
             Debug.Log("Battery is empty. Robot cannot move!");
         }
     }
@@ -135,6 +135,7 @@ public class RobotController : MonoBehaviour
         if (modeText != null)
         {
             modeText.text = $"Mode: {currentMode}";
+            
         }
 
         switch (mode)

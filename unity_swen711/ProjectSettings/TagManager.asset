@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Package
+  - MailBox
   layers:
   - Default
   - TransparentFX

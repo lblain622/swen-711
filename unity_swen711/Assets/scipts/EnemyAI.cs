@@ -1,78 +1,69 @@
 ﻿using UnityEngine;
+using System; // Required for Action
 
 public class EnemyAI : MonoBehaviour
 {
-    private Transform player;
-    public float baseSpeed = 2f;
-    private float currentSpeed;
-    private float distance;
-    private RobotController playerController;
-    public int health = 4;
+    [Header("Combat Settings")]
+    public int health = 4; // Matches your original design
     public int contactDamage = 1;
+    public float speed = 2f;
+
+    // DamageSystem event
+    public event Action OnDeath;
+
+    private Transform player;
+    private bool isDead = false;
 
     void Start()
     {
-        GameObject playerObj = GameObject.FindWithTag("Player");
-        if (playerObj != null)
+        player = GameObject.FindWithTag("Player")?.transform;
+        if (player == null)
         {
-            player = playerObj.transform;
+            Debug.LogError("Player not found!");
+            enabled = false;
         }
-        else
-        {
-            Debug.LogError("No GameObject with tag 'Player' found!");
-        }
-        playerController = player.GetComponent<RobotController>();
-        currentSpeed = baseSpeed;
     }
 
-    private void Update()
+    void Update()
     {
-        // Adjust behavior based on player mode
-        if (playerController != null && playerController.currentMode == RobotMode.Stealth)
+        if (!isDead && player != null)
         {
-            // In stealth mode, only chase if very close
-            float detectionRange = playerController.stealthDetectionRange;
-            if (Vector2.Distance(transform.position, player.position) > detectionRange)
-            {
-                return; // Don't chase if too far in stealth mode
-            }
-            currentSpeed = baseSpeed * 0.7f; // Slower pursuit in stealth mode
+            transform.position = Vector2.MoveTowards(
+                transform.position, 
+                player.position, 
+                speed * Time.deltaTime
+            );
         }
-        else
-        {
-            currentSpeed = baseSpeed; // Normal speed otherwise
-        }
-
-        Vector2 direction = player.position - transform.position;
-        direction.Normalize();
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-        transform.position = Vector2.MoveTowards(
-            this.transform.position, 
-            player.position, 
-            currentSpeed * Time.deltaTime
-        );
-        transform.rotation = Quaternion.Euler(Vector3.forward * angle);
     }
+
     public void TakeDamage(int amount)
     {
+        if (isDead) return;
+
         health -= amount;
         if (health <= 0)
         {
-            Destroy(gameObject);
+            Die();
         }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    void Die()
     {
-        // Handle player contact
-        if (collision.gameObject.CompareTag("Player"))
+        isDead = true;
+        OnDeath?.Invoke(); // Notify spawner
+        Destroy(gameObject, 0.1f); // Small delay for event propagation
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!isDead && collision.gameObject.CompareTag("Player"))
         {
-            PlayerHealth player = collision.gameObject.GetComponent<PlayerHealth>();
-            if (player != null)
+            var playerDamage = collision.gameObject.GetComponent<DamageSystem>();
+            if (playerDamage != null)
             {
-                player.TakeDamage(contactDamage);
-                Destroy(gameObject); 
+                playerDamage.TakeDamage(contactDamage);
             }
+            Die(); // Enemy dies on contact
         }
     }
 }

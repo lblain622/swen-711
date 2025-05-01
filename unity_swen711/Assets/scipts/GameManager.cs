@@ -36,7 +36,15 @@ public class GameManager : MonoBehaviour
         RobotController player = FindObjectOfType<RobotController>();
         if (player != null && batteryText != null)
         {
-            batteryText.text = "Battery: " + Mathf.RoundToInt(player.batteryLevel) + "%";
+            
+            if (player.batteryLevel <= 0)
+            {
+                batteryText.text= "Battery is empty. Robot cannot move!";
+            }
+            else
+            {
+                batteryText.text = "Battery: " + Mathf.RoundToInt(player.batteryLevel) + "%";
+            }
         }
     }
 }
