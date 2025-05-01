@@ -105,7 +105,6 @@ MonoBehaviour:
   health: 4
   contactDamage: 1
   speed: 2
-  playerDamage: {fileID: 8364080875356162632, guid: d5fd402977a86e348af7823f668dbca1, type: 3}
 --- !u!60 &5746345016716205147
 PolygonCollider2D:
   m_ObjectHideFlags: 0

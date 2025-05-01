@@ -34,7 +34,7 @@ public class PlayerHealth : MonoBehaviour
         // Health regeneration
         if (isRegenerating)
         {
-            int regenAmount = Mathf.RoundToInt(1* Time.deltaTime);
+            int regenAmount = 1;
             Debug.Log("Healing:" + regenAmount);
             if (regenAmount > 0) // Only heal if regenRate is positive
             {

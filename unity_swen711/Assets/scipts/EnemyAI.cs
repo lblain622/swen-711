@@ -4,7 +4,7 @@ using System; // Required for Action
 public class EnemyAI : MonoBehaviour
 {
     [Header("Combat Settings")]
-    public int health = 4; // Matches your original design
+    public int health = 4; 
     public int contactDamage = 1;
     public float speed = 2f;
 
@@ -46,9 +46,8 @@ public class EnemyAI : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
-        if (isDead) return;
-
         health -= amount;
+Debug.Log("Enemy Hit");
         if (health <= 0)
         {
             Die();
