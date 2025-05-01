@@ -9,8 +9,6 @@ using UnityEngine;
         public Transform boxholder;
         public float rayDist;
 
-        private RobotController controller;
-        
 
         void Update()
         {
@@ -23,7 +21,6 @@ using UnityEngine;
                     grabCheck.collider.gameObject.transform.parent = boxholder;
                     grabCheck.collider.gameObject.transform.position = boxholder.position;
                     grabCheck.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
-                    controller.changeSpeed(.5f);
                     
                 }
                 else
