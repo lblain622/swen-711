@@ -2,54 +2,49 @@
 
 public class Bullet : MonoBehaviour
 {
-    public float speed = 10f;
-    public float lifetime = 5f;
     private Vector2 direction;
-    private RobotController robotController;
+    private float speed;
+    private float lifetime;
+    private float damage;
+    private SpriteRenderer spriteRenderer;
 
-    void Start()
+    void Awake()
     {
-        direction = transform.up;
-        robotController = FindObjectOfType<RobotController>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.enabled = false;
+    }
+
+    public void Initialize(Vector2 moveDirection, float moveSpeed, float bulletLifetime, float bulletDamage)
+    {
+        direction = moveDirection;
+        speed = moveSpeed;
+        lifetime = bulletLifetime;
+        damage = bulletDamage;
+        
+        // Activate bullet
+        spriteRenderer.enabled = true;
         Destroy(gameObject, lifetime);
+        
+        // Rotate bullet to face movement direction
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
     void Update()
     {
-        transform.Translate(direction * speed * Time.deltaTime);
+        transform.Translate(direction * speed * Time.deltaTime, Space.World);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            // Get damage amount based on current mode
-            int damage = GetDamageAmount();
-            
-            // Apply damage to enemy
             EnemyAI enemy = collision.gameObject.GetComponent<EnemyAI>();
             if (enemy != null)
             {
-                enemy.TakeDamage(damage);
+                enemy.TakeDamage(Mathf.RoundToInt(damage));
             }
         }
         Destroy(gameObject);
-    }
-
-    private int GetDamageAmount()
-    {
-        if (robotController == null) return 1;
-
-        switch (robotController.currentMode)
-        {
-            case RobotMode.Balanced: return 2;
-            case RobotMode.Combat: return 4;
-            default: return 1; // Stealth and Speed modes
-        }
-    }
-
-    public void ActivateBullet()
-    {
-        GetComponent<SpriteRenderer>().enabled = true;
     }
 }

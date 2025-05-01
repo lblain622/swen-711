@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 2595706433139364837}
   - component: {fileID: 8364080875356162632}
   - component: {fileID: 7189869539340781322}
-  - component: {fileID: 3146127425607257170}
   - component: {fileID: 6491223302029958700}
   - component: {fileID: 7071413310457932090}
   - component: {fileID: 7826459410989470303}
@@ -38,12 +37,14 @@ Transform:
   m_GameObject: {fileID: 597197113118861589}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.58569455, y: -1.800899, z: 0}
+  m_LocalPosition: {x: -0.63, y: -2.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 974498941366370529}
   - {fileID: 4174590060971242590}
+  - {fileID: 696982756308200942}
+  - {fileID: 4374196226287613268}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7418174215945561583
@@ -149,9 +150,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed70ad04e6d5a10428a2d96a06733f31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
-  gameOverPanel: {fileID: 0}
+  maxHealth: 5
   healthText: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+  stealthRegenRate: 2
 --- !u!50 &7189869539340781322
 Rigidbody2D:
   serializedVersion: 5
@@ -179,32 +181,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &3146127425607257170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 597197113118861589}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2016905aec7ec2439c610eb632b9f46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  modeText: {fileID: 0}
-  maxBattery: 100
-  baseSpeed: 5
-  batteryLevel: 100
-  batteryDrainRate: 1
-  currentMode: 0
-  rotationSpeed: 10
-  rotationOffset: -90
-  combatDamageMultiplier: 1.5
-  combatDamageReduction: 0.7
-  stealthDamageMultiplier: 0.7
-  stealthDetectionRange: 3
-  speedVisionReduction: 0.6
-  speedHealthReduction: 0.7
 --- !u!114 &6491223302029958700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,19 +206,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modeText: {fileID: 0}
+  batteryText: {fileID: 0}
   maxBattery: 100
   baseSpeed: 5
   batteryLevel: 100
   batteryDrainRate: 1
-  currentMode: 0
   rotationSpeed: 10
   rotationOffset: -90
+  currentMode: 0
   combatDamageMultiplier: 1.5
   combatDamageReduction: 0.7
   stealthDamageMultiplier: 0.7
   stealthDetectionRange: 3
   speedVisionReduction: 0.6
   speedHealthReduction: 0.7
+  healthRegenRate: 5
+  stealthActivationTime: 2
+  inStealthFromStationary: 0
 --- !u!114 &7826459410989470303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,9 +235,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbc8a7cb670fb1a4daabe424fcb83174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings:
+    bulletPrefab: {fileID: 571723055707720645, guid: 8b790036cfaaec04f9cf316b3dc8acc0, type: 3}
+    firePoint: {fileID: 4374196226287613268}
+    bulletSpeed: 20
+    bulletLifetime: 3
+    fireRate: 0.2
   baseDamage: 10
   energyCost: 5
   damageMultiplier: 1
+  combatDamageMultiplier: 1.5
+  stealthDamageMultiplier: 0.7
+  speedDamageMultiplier: 0.5
 --- !u!114 &5114089965390646758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,6 +313,52 @@ MonoBehaviour:
   grabDetect: {fileID: 4174590060971242590}
   boxholder: {fileID: 974498941366370529}
   rayDist: 0
+--- !u!1 &670174203948049123
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 696982756308200942}
+  - component: {fileID: 4997129913944897639}
+  m_Layer: 0
+  m_Name: VisionController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &696982756308200942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670174203948049123}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 997791901415566470}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4997129913944897639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670174203948049123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 866022a44ad84154aa0aaaff766d1b82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visionMaskPrefab: {fileID: 2284240316115372715, guid: fd759695a35a56240a2334f9460425b3, type: 3}
+  stealthVisionMultiplier: 1.5
 --- !u!1 &5111783996043858023
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,6 +385,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.73, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 997791901415566470}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5165612761451908126
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4374196226287613268}
+  m_Layer: 0
+  m_Name: firepoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4374196226287613268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5165612761451908126}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.02, y: 0.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

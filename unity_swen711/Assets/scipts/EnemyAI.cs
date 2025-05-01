@@ -27,14 +27,21 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
-        if (!isDead && player != null)
+        if (isDead || player == null) return;
+
+        // Check if player is in stealth and stationary
+        RobotController playerRobot = player.GetComponent<RobotController>();
+        if (playerRobot != null && playerRobot.inStealthFromStationary)
         {
-            transform.position = Vector2.MoveTowards(
-                transform.position, 
-                player.position, 
-                speed * Time.deltaTime
-            );
+            return; // Ignore player in stealth
         }
+
+        // Normal movement toward player
+        transform.position = Vector2.MoveTowards(
+            transform.position, 
+            player.position, 
+            speed * Time.deltaTime
+        );
     }
 
     public void TakeDamage(int amount)
