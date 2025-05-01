@@ -5,6 +5,7 @@ public enum RobotMode { Balanced, Stealth, Combat, Speed }
 public class RobotController : MonoBehaviour
 {
     public TextMeshProUGUI modeText;
+    public TextMeshProUGUI batteryText;
     private Package currentPackage;
     public float maxBattery = 100f;
     public float baseSpeed = 5f;
@@ -76,10 +77,10 @@ public class RobotController : MonoBehaviour
    
 
         // Switch modes Override
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SetMode(RobotMode.Balanced);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SetMode(RobotMode.Stealth);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SetMode(RobotMode.Combat);
-        if (Input.GetKeyDown(KeyCode.Alpha4)) SetMode(RobotMode.Speed);
+        //if (Input.GetKeyDown(KeyCode.Alpha1)) SetMode(RobotMode.Balanced);
+        //if (Input.GetKeyDown(KeyCode.Alpha2)) SetMode(RobotMode.Stealth);
+        //if (Input.GetKeyDown(KeyCode.Alpha3)) SetMode(RobotMode.Combat);
+        //if (Input.GetKeyDown(KeyCode.Alpha4)) SetMode(RobotMode.Speed);
     }
     public void ResetRobot()
     {
@@ -124,6 +125,19 @@ public class RobotController : MonoBehaviour
         {
             moveSpeed = 0;  
             Debug.Log("Battery is empty. Robot cannot move!");
+        }
+
+        if ( batteryText != null)
+        {
+
+            if (batteryLevel <= 0)
+            {
+                batteryText.text = "Battery is empty. Robot cannot move!";
+            }
+            else
+            {
+                batteryText.text = "Battery: " + Mathf.RoundToInt(batteryLevel) + "%";
+            }
         }
     }
 

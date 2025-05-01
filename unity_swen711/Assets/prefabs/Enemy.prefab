@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4101583182436143175}
   - component: {fileID: 4036684539585295853}
-  - component: {fileID: 1854248794426454298}
+  - component: {fileID: 297232803680943677}
   - component: {fileID: 5746345016716205147}
   - component: {fileID: 6506101697411310041}
   m_Layer: 0
@@ -90,7 +90,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1854248794426454298
+--- !u!114 &297232803680943677
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,6 +105,7 @@ MonoBehaviour:
   health: 4
   contactDamage: 1
   speed: 2
+  playerDamage: {fileID: 8364080875356162632, guid: d5fd402977a86e348af7823f668dbca1, type: 3}
 --- !u!60 &5746345016716205147
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -151,9 +152,9 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 0.5773587}
-      - {x: -0.5, y: -0.28866667}
-      - {x: 0.5, y: -0.28866667}
+    - - {x: 0, y: 0.62663007}
+      - {x: -0.5677483, y: -0.31022292}
+      - {x: 0.552351, y: -0.31638187}
   m_UseDelaunayMesh: 0
 --- !u!50 &6506101697411310041
 Rigidbody2D:

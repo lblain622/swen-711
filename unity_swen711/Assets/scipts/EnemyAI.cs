@@ -12,6 +12,7 @@ public class EnemyAI : MonoBehaviour
     public event Action OnDeath;
 
     private Transform player;
+ 
     private bool isDead = false;
 
     void Start()
@@ -56,14 +57,20 @@ public class EnemyAI : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!isDead && collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            var playerDamage = collision.gameObject.GetComponent<DamageSystem>();
-            if (playerDamage != null)
+            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+            
+            if (playerHealth != null)
             {
-                playerDamage.TakeDamage(contactDamage);
+                Debug.Log("hit player");
+                playerHealth.TakeDamage(contactDamage);
+            }else
+            {
+                Debug.LogWarning("Player object missing PlayerHealth component!");
             }
-            Die(); // Enemy dies on contact
+            Die();
+            
         }
     }
 }

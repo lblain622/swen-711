@@ -1,51 +1,71 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+
 public class PlayerHealth : MonoBehaviour
 {
-    public int health = 10;
-    public GameObject gameOverPanel; 
+    [Header("Settings")]
+    public int maxHealth = 10;
     public TextMeshProUGUI healthText;
-    void UpdateHealthDisplay()
+    public GameObject gameOverPanel;
+    
+    private int currentHealth;
+    private bool isDead = false;
+
+    void Start()
     {
-        if (healthText != null)
+        currentHealth = maxHealth;
+        UpdateHealthUI();
+    }
+
+    void Update()
+    {
+        // Handle R key restart only when dead
+        if (isDead && Input.GetKeyDown(KeyCode.R))
         {
-            healthText.text = "Health: " + health;
+            GameManager.Instance.RestartGame();
         }
     }
 
     public void TakeDamage(int amount)
     {
-        health -= amount;
-        if (health <= 0)
+        if (isDead) return;
+        
+        currentHealth = Mathf.Max(0, currentHealth - amount);
+        UpdateHealthUI();
+        
+        if (currentHealth <= 0)
         {
-            Debug.Log("Player died!");
+            Die();
         }
     }
-    
-    void GameOver()
+
+    void Die()
     {
-       
+        isDead = true;
         Time.timeScale = 0f;
+        GetComponent<RobotController>().enabled = false;
         
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
         }
- 
-        GetComponent<RobotController>().enabled = false;
-       
     }
-    public void RestartGame()
+
+    void UpdateHealthUI()
     {
-        Time.timeScale = 1f; // Resume time
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reload current scene
+        if (healthText != null)
+        {
+            healthText.text = $"Health: {currentHealth}/{maxHealth}";
+        }
     }
-    public void QuitGame()
+
+    // Called when game restarts
+    public void ResetHealth()
     {
-        Application.Quit();
-    #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false; // For testing in editor
-    #endif
+        currentHealth = maxHealth;
+        isDead = false;
+        UpdateHealthUI();
+        GetComponent<RobotController>().enabled = true;
     }
 }
