@@ -221,13 +221,11 @@ public class RobotController : MonoBehaviour
                 break;
                 
             case RobotMode.Stealth:
-                moveSpeed = baseSpeed * 0.8f;
                 batteryDrainRate = 1.2f;
                 if (weaponSystem != null) weaponSystem.damageMultiplier = stealthDamageMultiplier;
                 break;
                 
             case RobotMode.Combat:
-                moveSpeed = baseSpeed * 0.7f;
                 batteryDrainRate = 1.5f;
                 if (weaponSystem != null) weaponSystem.damageMultiplier = combatDamageMultiplier;
                 if (damageSystem != null) damageSystem.damageReduction = combatDamageReduction;
