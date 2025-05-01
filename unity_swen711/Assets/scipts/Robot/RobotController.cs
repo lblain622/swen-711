@@ -26,6 +26,8 @@ public class RobotController : MonoBehaviour
     public float speedHealthReduction = 0.7f;
     public float healthRegenRate = 2f; 
     public float stealthActivationTime = 2f; // Changed from stealthActivationDelay
+
+    public AudioSource source; 
     
     // Private variables
     private Package currentPackage;
@@ -94,6 +96,10 @@ public class RobotController : MonoBehaviour
         RotateToMouse();
         DrainBattery();
         CheckStealthActivation();
+    }
+
+    public void changeSpeed(float speed){
+        baseSpeed = speed;
     }
 
     public void CheckStealthActivation()
@@ -178,7 +184,9 @@ public class RobotController : MonoBehaviour
 
         if (batteryLevel <= 0)
         {
-            moveSpeed = 0;  
+            baseSpeed = 0;  
+            source.Stop();
+
             Debug.Log("Battery is empty. Robot cannot move!");
         }
 
@@ -213,13 +221,13 @@ public class RobotController : MonoBehaviour
                 break;
                 
             case RobotMode.Stealth:
-                moveSpeed = baseSpeed * 0.7f;
+                moveSpeed = baseSpeed * 0.8f;
                 batteryDrainRate = 1.2f;
                 if (weaponSystem != null) weaponSystem.damageMultiplier = stealthDamageMultiplier;
                 break;
                 
             case RobotMode.Combat:
-                moveSpeed = baseSpeed * 0.5f;
+                moveSpeed = baseSpeed * 0.7f;
                 batteryDrainRate = 1.5f;
                 if (weaponSystem != null) weaponSystem.damageMultiplier = combatDamageMultiplier;
                 if (damageSystem != null) damageSystem.damageReduction = combatDamageReduction;

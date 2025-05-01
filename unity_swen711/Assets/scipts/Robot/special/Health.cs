@@ -15,6 +15,8 @@ public class PlayerHealth : MonoBehaviour
     private bool isRegenerating = false;
     private float regenRate = 0f;
 
+    public AudioSource source; 
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -64,6 +66,7 @@ public class PlayerHealth : MonoBehaviour
 
     void Die()
     {
+        source.Stop();
         isDead = true;
         Time.timeScale = 0f;
         GetComponent<RobotController>().enabled = false;
